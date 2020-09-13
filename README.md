@@ -16,6 +16,9 @@ $ docker-compose exec app bin/rails c
 User.create!(email: 'hogehoge@example.com')
 ```
 
-```
+サンプルでは作成した `hogehoge@example.com` でメアド登録して認証URLを踏んだ後の
 
-```
+- プロフィール登録
+- 住所登録
+
+というシナリオを想定しています。

@@ -1,0 +1,27 @@
+<% if @registration_form.errors.any? %>
+  <div class="c-form-errors" style="border: 2px solid #cc0000">
+    <h2 class="c-form-errors_title">エラーを確認してください</h2>
+    <ul class="c-form-errors_list">
+      <% @registration_form.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<%= form_with(model: @registration_form, url: confirm_registration_url, local: true) do |f| %>
+  <%= f.fields_for :user_profile_form, f.object.user_profile_form do |ff| %>
+    <%= ff.text_field :last_name, placeholder: '姓' %>
+    <%= ff.text_field :first_name, placeholder: '名' %>
+  <% end %>
+
+  <%= f.fields_for :user_address_form, f.object.user_address_form do |ff| %>
+    <%= ff.text_field :zipcode, placeholder: '郵便番号' %>
+    <%= ff.text_field :body, placeholder: '住所' %>
+  <% end %>
+
+  <%= f.check_box :agreement %> 規約に同意する
+
+  <%= f.submit '確認画面へ進む' %>
+<% end %>
