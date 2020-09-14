@@ -3,31 +3,37 @@ class RegistrationsController < ApplicationController
 
   def show
     @registration_form = RegistrationForm.new(
-      @user.build_user_profile,
-      @user.build_user_address
+      target_user_profile,
+      target_user_address
     )
   end
 
   def confirm
     @registration_form = RegistrationForm.new(
-      @user.build_user_profile,
-      @user.build_user_address,
+      target_user_profile,
+      target_user_address,
       registration_form_params
     )
 
     return render :show unless @registration_form.valid?
   end
 
-  def update
+  def create
     @registration_form = RegistrationForm.new(
-      @user.build_user_profile,
-      @user.build_user_address,
+      target_user_profile,
+      target_user_address,
       registration_form_params
     )
 
-    @registration_form.valid!
+    @registration_form.validate!
 
     # workflowの処理
+    ::Users::RegistrationWorkflow.run!(
+      user_profile: @registration_form.user_profile_form.model,
+      user_address: @registration_form.user_address_form.model
+    )
+
+    redirect_to root_path, notice: '登録完了しました！'
   end
 
   private
@@ -48,5 +54,13 @@ class RegistrationsController < ApplicationController
           :body
         ]
       )
+    end
+
+    def target_user_profile
+      @user.user_profile || @user.build_user_profile
+    end
+
+    def target_user_address
+      @user.user_address || @user.build_user_address
     end
 end

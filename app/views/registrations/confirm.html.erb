@@ -1,0 +1,22 @@
+<div>
+  以下の情報でいいすか？ <br>
+  <%= @registration_form.user_profile_form.last_name %> <%= @registration_form.user_profile_form.first_name %> <br>
+  <%= @registration_form.user_address_form.zipcode %> <%= @registration_form.user_address_form.body %> <br>
+  規約に同意する
+</div>
+
+<%= form_with(model: @registration_form, url: registration_url, local: true) do |f| %>
+  <%= f.fields_for :user_profile_form, f.object.user_profile_form do |ff| %>
+    <%= ff.hidden_field :last_name, placeholder: '姓' %>
+    <%= ff.hidden_field :first_name, placeholder: '名' %>
+  <% end %>
+
+  <%= f.fields_for :user_address_form, f.object.user_address_form do |ff| %>
+    <%= ff.hidden_field :zipcode, placeholder: '郵便番号' %>
+    <%= ff.hidden_field :body, placeholder: '住所' %>
+  <% end %>
+
+  <%= f.hidden_field :agreement %>
+
+  <%= f.submit 'この情報で登録する' %>
+<% end %>
